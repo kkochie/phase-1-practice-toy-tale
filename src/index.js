@@ -20,6 +20,19 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(res => res.json())
   }
 
+  function createNewToy(newToy) {
+    fetch('http://localhost:3000/toys', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newToy)
+    })
+    .then(res => res.json())
+    .then(toy => console.log(toy))
+  }
+
+
   //Rendering functions
   function createToy(toyData) {
     const div = document.createElement('div');
@@ -42,10 +55,25 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector('#toy-collection').append(div);
   }
 
+  //Event Listeners
+  document.querySelector('.add-toy-form').addEventListener('submit', handleToySubmit)
+
+  //Event Handlers
+  function handleToySubmit(e) {
+    e.preventDefault();
+    //Create new toy
+    let newToy = {
+      name: e.target.name.value,
+      image: e.target.image.value,
+      likes: 0
+    }
+    createToy(newToy);
+    createNewToy(newToy);
+  }
+
   //Invoke functions
   fetchResource('http://localhost:3000/toys')
   .then(toys => toys.forEach(createToy))
-  
 
 });
 
